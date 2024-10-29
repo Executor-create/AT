@@ -8,20 +8,37 @@ import org.testng.annotations.Test;
 import io.github.bonigarcia.wdm.managers.ChromeDriverManager;
 
 public class Task11 {
-  WebDriver driver;
+  private WebDriver driver;
+  private RegistrationPage registrationPage;
 
-  @Test
-  void uiTest() {
-    System.setProperty("webdriver.chrome.driver",
-        "/home/executor/projects/AT/demo/driver/chromedriver.exe");
+  @BeforeClass
+  public void setUp() {
+    WebDriverManager.chromedriver().setup();
     driver = new ChromeDriver();
-    driver.get("https://demoqa.com/register");
-    System.out.println(driver.getCurrentUrl());
+    driver.manage().window().maximize();
+    registrationPage = new RegistrationPage(driver);
+    homePage = new HomePage(driver);
   }
 
-  // @BeforeTest
-  // void setup() {
-  // ChromeDriverManager.getInstance().setup();
-  // driver = new ChromeDriver();
-  // }
+  @Test
+  public void testUserRegistration() {
+    registrationPage.navigateTo("https://demoqa.com/register");
+
+    registrationPage.enterFirstName("John");
+    registrationPage.enterLastName("Doe");
+    registrationPage.enterUserName("johndoe@example.com");
+    registrationPage.enterPassword("StrongPassword123!");
+
+    registrationPage.clickRegister();
+
+    Assert.assertTrue(homePage.isConfirmationMessageDisplayed(),
+        "Confirmation message is not displayed. Registration may have failed.");
+  }
+
+  @AfterClass
+  public void tearDown() {
+    if (driver != null) {
+      driver.quit();
+    }
+  }
 }
