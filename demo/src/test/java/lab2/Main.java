@@ -9,6 +9,10 @@ class Main {
     String name = scanner.nextLine();
     int age = Integer.parseInt(scanner.nextLine());
 
-    System.out.printf("Hello, %s! You are %d years old.%n", name, age);
+    greetUser(name, age);
+  }
+
+  public static String greetUser(String name, int age) {
+    return String.format("Hello, %s! You are %d years old.", name, age);
   }
 }
